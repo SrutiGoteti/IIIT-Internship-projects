@@ -106,11 +106,11 @@ Screenshots of the detection and segmentation outputs are stored in the results/
 
 ### Tasks Completed
 
-✅ Created and activated a virtual environment
-✅ Installed the ultralytics package
-✅ Tested YOLOv8 for object detection and segmentation on example online images
-✅ Pushed project and documentation to GitHub
-✅ Organized results and created README documentation
+✅ Created and activated a virtual environment  
+✅ Installed the ultralytics package  
+✅ Tested YOLOv8 for object detection and segmentation on example online images  
+✅ Pushed project and documentation to GitHub  
+✅ Organized results and created README documentation  
 
 ## References
 
