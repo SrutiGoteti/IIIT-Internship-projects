@@ -1,10 +1,17 @@
 from ultralytics import YOLO
 
-#Loads a pretrained model YOLOv8 for object detection
+# Load pretrained model for detection
 model = YOLO('yolov8n.pt')
 
-#Test the model with an online image and store the info in a list
-results = model('https://ultralytics.com/images/zidane.jpg')
+# List of image URLs
+images = [
+    'https://ultralytics.com/images/zidane.jpg',
+    'https://ultralytics.com/images/bus.jpg',
+    'https://thumbs.dreamstime.com/b/cybertruck-drives-busy-washington-d-c-intersection-traffic-signals-usa-may-futuristic-stainless-steel-truck-384528985.jpg'
+]
 
-#The 1st element in this list gives us the image with the objects detected
-results[0].show()
+# Run detection on each image
+for img in images:
+    results = model(img)
+    print(f"Results for {img}:")
+    results[0].show()
