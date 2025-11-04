@@ -1,4 +1,3 @@
-````markdown
 # Object Detection and Segmentation using YOLOv8
 
 ## Project Overview
@@ -17,6 +16,11 @@ It can perform:
 
 ---
 
+## Setup Instructions
+
+### 1. Create Virtual Environment
+```bash
+python -m venv ultralytics_env
 ## Setup Instructions
 
 ### 1. Create Virtual Environment
