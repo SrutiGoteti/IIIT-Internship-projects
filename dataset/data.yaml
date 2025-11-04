@@ -1,0 +1,14 @@
+train: train/images
+val: valid/images
+test: test/images
+
+nc: 5
+names: ['car', 'person', 'tie', 'traffic light', 'truck']
+
+# The Roboflow section is optional for training but fine to keep.
+roboflow:
+  workspace: iiit-proj
+  project: large-omzwo
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/iiit-proj/large-omzwo/dataset/1
