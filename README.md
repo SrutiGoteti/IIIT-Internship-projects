@@ -1,10 +1,12 @@
+````markdown
 # Object Detection and Segmentation using YOLOv8
 
 ## Project Overview
-This project demonstrates **Object Detection** and **Image Segmentation** using the **Ultralytics YOLOv8** model.
-It focuses on understanding the entire machine learning workflow, from environment setup and testing pre-trained models to custom dataset training and performance analysis.
+This project implements a complete **Object Detection and Video Processing Pipeline** using the **Ultralytics YOLOv8** model.
 
-The purpose of this project is to understand how **YOLO (You Only Look Once)** works for detecting and segmenting multiple objects in real-time images.
+It focuses on understanding the entire machine learning workflow: from environment setup and testing pre-trained models, to **custom dataset training** (Task 2), and finally, **deploying the model to process video** (Task 3).
+
+The purpose of this project is to understand how **YOLO (You Only Look Once)** works for detecting and segmenting multiple objects in real-time images and videos.
 
 ---
 
@@ -18,27 +20,17 @@ It can perform:
 
 ## Setup Instructions
 
-### 1. Create Virtual Environment
-```bash
-python -m venv ultralytics_env
-## Setup Instructions
-
-### 1. Create Virtual Environment
+### 1. Create and Activate Virtual Environment
 ```bash
 python -m venv ultralytics_env
 ````
 
-### 2\. Activate the Environment (Windows)
+### 2\. Activate the Environment
 
-```bash
-ultralytics_env\Scripts\activate
-```
-
-### For Linux
-
-```bash
-source ultralytics_env/bin/activate
-```
+| OS | Command |
+| :--- | :--- |
+| **Windows** | `ultralytics_env\Scripts\activate` |
+| **Linux/Mac** | `source ultralytics_env/bin/activate` |
 
 ### 3\. Install Dependencies
 
@@ -46,43 +38,21 @@ source ultralytics_env/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4\. Verify Installation
+### 4\. Install FFmpeg
+
+**FFmpeg** is required for video processing (frame extraction and stitching). Ensure it is installed and added to your system's PATH.
+
+### 5\. Verify Installation
 
 ```bash
 yolo help
 ```
 
-If you see the help menu, then setup is complete.
-
-## Project Structure
-
-```css
-vision_project/
-│
-├── src/
-│   ├── object_detection.py
-│   ├── object_segmentation.py
-│   └── train_model.py          <-- Added for custom training logic
-│
-├── dataset/                    <-- Custom training data (Images, Labels, data.yaml)
-│   ├── train/
-│   └── val/
-│
-├── results/
-│   ├── metrics.json            <-- Numerical results (mAP, loss)
-│   ├── BoxPR_curve.png         <-- Performance graph
-│   └── confusion_matrix_normalized.png  <-- Classification breakdown
-│   └── ... (All result images) 
-│
-├── venv/
-│
-├── requirements.txt
-└── README.md
-```
+If you see the help menu, the setup is complete.
 
 -----
 
-## Phase II: Custom Model Training & Results Analysis (50 Epochs)
+## Phase II: Custom Model Training & Results Analysis (Task 2)
 
 A custom YOLOv8n model was trained on a small, five-class dataset (car, person, tie, traffic light, truck) to evaluate the end-to-end training process.
 
@@ -96,56 +66,87 @@ A custom YOLOv8n model was trained on a small, five-class dataset (car, person, 
 
 ### Key Results and Performance Summary
 
-The training successfully converged, as shown by the consistently decreasing loss curves.
-
 | Metric / Class | Value | Conclusion |
 | :--- | :--- | :--- |
-| **Overall mAP@0.5** | **\~0.85** | Strong result, indicating good localization and classification at a 50% Intersection over Union (IoU) threshold. |
+| **Overall mAP@0.5** | **\~0.85** | Strong result, indicating good localization and classification. |
 | **mAP@0.5:0.95** | \~0.30 | Acceptable, but suggests difficulties in achieving highly precise bounding boxes. |
 
-### Bottleneck Analysis (The Problem)
+### Bottleneck Analysis (Training Problem)
 
-The **Confusion Matrix** (available in the `results/` folder) confirms that performance is bottlenecked by the low volume and imbalance of data for specific classes.  For instance, true instances of 'truck' are predicted as 'Background' over 60% of the time.
-
-  * **Truck:** Only predicted correctly 32% of the time. The model predicts **Background** for true truck instances in over 60% of cases. This is a severe **Recall** issue.
-  * **Traffic Light:** Low mAP due to a limited and non-diverse set of training examples.
+The **Confusion Matrix** confirms that performance is bottlenecked by the low volume and imbalance of data for specific classes. For instance, true instances of 'truck' are predicted as 'Background' in over 60% of cases (a severe **Recall** issue).
 
 -----
 
-## Current Challenge: Data Imbalance & Next Steps
+## Phase III: End-to-End Video Processing Pipeline (Task 3)
 
-The immediate priority is to fix the data imbalance before moving to the video processing challenge.
+The trained model was successfully deployed to process a video clip, validating its end-to-end utility.
 
-### 1\. Data Augmentation Plan (Phase 1)
+### Pipeline Implementation (3 Steps)
 
-The model will be re-trained after increasing the instance count for struggling classes and implementing stronger data augmentation flags:
-
-| Class to Fix | Target Instances (Minimum) | Primary Improvement Goal |
+| Step | Purpose | Command/Script |
 | :--- | :--- | :--- |
-| **truck** | **50+** | Fix low Recall against **Background** confusion. |
-| **traffic light** | **50+** | Improve overall confidence and mAP. |
-| **tie** | **50+** | Stabilize detection of small objects. |
-
-### 2\. Video Processing Challenge (Phase 2)
-
-Once the model's performance is stabilized, the next task is to apply the object detection model to video:
-
-1.  Use `ffmpeg` to extract frames from a public video clip.
-2.  Run the trained YOLOv8 model on all extracted images.
-3.  Use `ffmpeg` to stitch the processed, annotated images back into a final output video.
+| **1. Extraction** | Decompose video into frames (25 FPS). | `ffmpeg -i ./input_video/input.mp4 -q:v 2 -r 25 ./frames_input/frame_%04d.jpg` |
+| **2. Inference** | Run custom YOLOv8 model on all frames (using `process_video_pipeline.py`). | `python process_video_pipeline.py` |
+| **3. Stitching** | Reassemble annotated frames into the final video. | `ffmpeg -framerate 25 -i ./video_output_run/run_processed_frames/frame_%04d.jpg -c:v libx264 -pix_fmt yuv420p ./final_output/output_video_processed.mp4` |
 
 -----
 
-## Tasks Completed
+## 🚧 Current Limitations and Future Work
 
-  - Created and activated a virtual environment
-  - Installed the ultralytics package
-  - Tested YOLOv8 for object detection and segmentation on example online images
-  - **Trained a custom YOLOv8n model on a 5-class dataset**
-  - **Analyzed training progress (Loss curves, mAP)**
-  - **Identified critical class-specific performance bottlenecks (Truck/Background confusion)**
-  - Pushed project and documentation to GitHub
-  - Organized results and created README documentation
+The video processing confirmed a major flaw from the training analysis, which is the current focus for iteration.
+
+### 1\. Critical Limitation: Persistent False Positives (Truck Misclassification)
+
+The training bottleneck (low 'truck' Recall) manifested as a False Positive problem in the video:
+
+  * **Observed Issue:** Sections of the static background in the video (e.g., road signs, overhead structures, and non-vehicle shapes) are consistently misclassified as **'truck'** with moderate confidence scores.
+  * **Root Cause:** The model failed to generalize the 'truck' class well due to insufficient and non-diverse training data, causing it to confuse truck features with complex background elements.
+
+### 2\. Immediate Next Steps (Iteration Plan)
+
+| Goal | Action | Primary Improvement Goal |
+| :--- | :--- | :--- |
+| **Data Fix** | Increase instance count for **truck**, **traffic light**, and **tie** classes (Target: 50+ instances each). | **Immediate:** Resolve 'truck' confusion with Background (False Positives in video). |
+| **Post-Processing**| Implement a script to filter out low-confidence, stationary truck detections. | Mitigate persistent false positives without retraining. |
+| **Architecture** | Retrain using the larger **YOLOv8s** (Small) architecture. | Evaluate the trade-off between increased accuracy (better mAP) and inference speed. |
+
+-----
+
+## ✅ Tasks Completed (End-to-End)
+
+  - Created and activated a virtual environment.
+  - Installed the `ultralytics` package and tested pre-trained models.
+  - **Trained a custom YOLOv8n model on a 5-class dataset (Task 2).**
+  - **Analyzed training progress (Loss curves, mAP) and identified critical performance bottlenecks.**
+  - **Implemented the full video processing pipeline using FFmpeg and the custom YOLOv8 model (Task 3).**
+  - Pushed project and documentation to GitHub.
+
+-----
+
+## Project Structure
+
+```css
+vision_project/
+│
+├── src/
+│   ├── object_detection.py
+│   ├── object_segmentation.py
+│   └── train_model.py
+│   └── process_video_pipeline.py           
+│
+├── dataset/
+├── runs/
+│   └── train/custom_yolo_n_stable_run/weights/best.pt
+│
+├── frames_input/                          
+├── video_output_run/                      
+├── final_output/                          
+│   └── output_video_processed.mp4
+│
+├── venv/
+├── requirements.txt
+└── README.md
+```
 
 -----
 
