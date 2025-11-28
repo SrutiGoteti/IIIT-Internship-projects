@@ -1,4 +1,3 @@
-````markdown
 # Object Detection and Segmentation using YOLOv8
 
 ## Project Overview
