@@ -125,7 +125,7 @@ The training bottleneck (low 'truck' Recall) manifested as a False Positive prob
 ## Project Structure
 
 ```css
-vision_project/
+Internship/
 │
 ├── src/
 │   ├── object_detection.py
