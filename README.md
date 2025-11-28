@@ -90,7 +90,7 @@ The trained model was successfully deployed to process a video clip, validating 
 
 -----
 
-## 🚧 Current Limitations and Future Work
+## Current Limitations and Future Work
 
 The video processing confirmed a major flaw from the training analysis, which is the current focus for iteration.
 
@@ -111,7 +111,7 @@ The training bottleneck (low 'truck' Recall) manifested as a False Positive prob
 
 -----
 
-## ✅ Tasks Completed (End-to-End)
+## Tasks Completed (End-to-End)
 
   - Created and activated a virtual environment.
   - Installed the `ultralytics` package and tested pre-trained models.
