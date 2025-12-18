@@ -1,4 +1,3 @@
----
 
 # Object Detection and Segmentation using YOLOv8
 
@@ -10,7 +9,7 @@ It focuses on understanding the entire machine learning workflow: from environme
 
 The purpose of this project is to understand how **YOLO (You Only Look Once)** works for detecting and segmenting multiple objects in real-time images and videos.
 
----
+
 
 ## What is YOLOv8?
 
