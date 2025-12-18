@@ -1,24 +1,16 @@
 # --- Data ---
-# We ignore the raw data because it's too big for GitHub
 data/raw/
 data/processed/
+data/test_videos/
 *.zip
 *.tar
 *.gz
 
 # --- YOLO & Models ---
-# We ignore all the "messy" training runs
 runs/
-# We ignore pretrained weights (they can be redownloaded)
+../runs/
 *.pt
-# IMPORTANT: We want to keep our FINAL model, so we "un-ignore" it
 !models/trained/best.pt
-
-# --- Project Outputs ---
-# We usually ignore the outputs folder so your GitHub remains clean, 
-# but for a school project, you might want to keep your final charts.
-# If you want to upload your charts/videos, put a # in front of these:
-outputs/
 
 # --- Python & Environment ---
 __pycache__/
@@ -28,6 +20,11 @@ __pycache__/
 env/
 venv/
 .env
+ultralytics_env/
+
+# --- Project Outputs ---
+outputs/video/
+!outputs/images/
 
 # --- OS Specific ---
 .DS_Store
